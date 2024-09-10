@@ -16,12 +16,14 @@ type Page struct {
 }
 
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	// Save .txt files to the "data" directory
+	filename := "data/" + p.Title + ".txt"
 	return os.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	// Load .txt files from the "data" directory
+	filename := "data/" + title + ".txt"
 	body, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -57,7 +59,8 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
 
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+// Load templates from the "templates" directory
+var templates = template.Must(template.ParseFiles("templates/edit.html", "templates/view.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl+".html", p)
@@ -86,3 +89,4 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
